@@ -21,6 +21,7 @@ import GenerateCouponPage from "../../features/dashboard/coupon/GenerateCouponPa
 import ScanCouponPage from "../../features/dashboard/coupon/ScanCouponPage";
 import LoginPage2 from "../../features/authentication/login/LoginPage2";
 import CorporateRegisterForm from "../../features/authentication/register/CorporateRegisterForm";
+import CorporateLoginPage from "../../features/authentication/login/steps/CorporateLoginPage";
 
 const App: React.FC<RouteComponentProps> = () => {
   const rootStore = useContext(RootStoreContext);
@@ -120,7 +121,7 @@ const App: React.FC<RouteComponentProps> = () => {
         {/* <h1>hsdf</h1> */}
         <Route exact path="/" component={HomePage} />
         {/* <Route exact path="/login" component={LoginPage} /> */}
-        <Route exact path="/login" component={LoginPage2} />
+        <Route exact path="/login" component={CorporateLoginPage} />
         <Route exact path="/register" component={CorporateRegisterForm} />
         {/* <Route exact path="/finance" component={FinanceForm} /> */}
 

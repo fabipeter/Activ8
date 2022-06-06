@@ -2,8 +2,6 @@ import { observer } from "mobx-react-lite";
 import React, { Fragment, useState } from "react";
 import { Button, Tab } from "semantic-ui-react";
 import { history } from "../../..";
-import CorporateLoginPage from "./steps/CorporateLoginPage";
-import CustomerLoginPage from "./steps/CustomerLoginPage";
 import CorporateLoginPane from "./steps2/CorporateLoginPane";
 import CustomerLoginPane from "./steps2/CustomerLoginPane";
 

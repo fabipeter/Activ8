@@ -35,8 +35,8 @@ const validate = combineValidators({
   password: isRequired("Password"),
 });
 
-const CorporateLoginPage = (props: any) => {
-  const { setOptionState } = props;
+const CorporateLoginPage = () => {
+  // const { setOptionState } = props;
   const rootStore = useContext(RootStoreContext);
 
   const [inputField, setInputField] = useState(new CorporateLoginFormValues());
@@ -67,7 +67,7 @@ const CorporateLoginPage = (props: any) => {
     <div className="commonPageWrapper">
       {corporateLoginLoading && <LoadingModal />}
       <div className="pt-5 pl-5">
-        <a className="cursorPointer" onClick={() => setOptionState(0)}>
+        <a className="cursorPointer" onClick={() => history.push("/")}>
           <div className="backNav">
             <img src="./images/blackArrow.svg" alt="" />
             <span>Back</span>

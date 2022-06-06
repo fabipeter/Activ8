@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect, useState } from "react";
 import { history } from "../../..";
 import LoadingSpinner from "../../general/LoadingSpinner";
-import CorporateLoginPage from "./steps/CorporateLoginPage";
 import CustomerLoginPage from "./steps/CustomerLoginPage";
 import LoginOptionPage from "./steps/LoginOptionPage";
 
@@ -27,8 +26,8 @@ const LoginPage = () => {
       return <LoginOptionPage setOptionState={setOptionState} />;
     case 1:
       return <CustomerLoginPage setOptionState={setOptionState} />;
-    case 2:
-      return <CorporateLoginPage setOptionState={setOptionState} />;
+    // case 2:
+    //   return <CorporateLoginPage setOptionState={setOptionState} />;
     default:
       return (
         <LoginOptionPage
