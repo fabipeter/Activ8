@@ -10,7 +10,7 @@ import {
   import { history } from "../..";
   import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
-import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } from "../models/user";
+import { CorporateLoginFormValues, CorporateRegistrationFormValues, CustomerLoginFormValues, IUserFormValues } from "../models/user";
   
   export default class UserStore {
     rootStore: RootStore;
@@ -30,6 +30,7 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
   
     @observable corporateLoginLoading: boolean = false;
     @observable adminLoginVerification: boolean = false;
+    @observable merchantRegistrationStatus = "default";
     
   
   
@@ -49,6 +50,9 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
     @action setCorporateLoginLoading = (x: boolean) => {
       this.corporateLoginLoading = x;
     };    
+    @action setActivatedStatus = (x: string) => {
+      this.merchantRegistrationStatus = x;
+    };
 
     @action setLoginStatus = (x: any) => {
       this.loginStatus = String(x);
@@ -64,14 +68,16 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
         const response = await agent.User.login(values);
         // console.log(response);
         if (response.response) {
-          // throw false;
-          this.rootStore.commonStore.setToken(response.response.token);
-          // this.rootStore.commonStore.setUser(response);
+          
+          runInAction(() => {
+            // throw false;
+          this.rootStore.commonStore.setToken(response.token);
+          this.rootStore.commonStore.setisLoggedIn();
 
           // this.setCustomerModalLoginVerification(false);
-          runInAction(() => {
             this.loginLoading = false;
           });
+          history.push("/dashboard/analytics");
           
         } else {
           // console.log(response.userName)
@@ -97,11 +103,15 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
         const response = await agent.User.corporate_login(values);
         // console.log(response);
         if (response.response) {
-          // throw false;
-          this.rootStore.commonStore.setUser(response.response);
+         
           runInAction(() => {
+             // throw false;
+          this.rootStore.commonStore.setUser(response);
+          this.rootStore.commonStore.setToken(response.token);
+          this.rootStore.commonStore.setisLoggedIn();
             this.corporateLoginLoading = false;
           });
+          history.push("/dashboard/analytics");
           
         } else {
           // console.log(response.userName)
@@ -133,7 +143,7 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
         const response = await agent.User.validateMToken(details);
         if (response.response) {
           // throw false;
-          this.rootStore.commonStore.setmToken(response.isSuccess);
+          this.rootStore.commonStore.setisLoggedIn();
           this.rootStore.commonStore.setToken(this.rootStore.commonStore.loggedInUser.accessToken);
 
           this.setAdminLoginVerification(false);
@@ -147,7 +157,7 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
           // throw response.message;
         }
       } catch (error) {
-        this.rootStore.commonStore.setmToken(true);
+        this.rootStore.commonStore.setisLoggedIn();
         this.rootStore.commonStore.setToken("jdfsdofaijeweihqerqehj");
         this.setAdminLoginVerification(false);
           this.setCorporateLoginLoading(false);
@@ -161,6 +171,47 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
     };
   
     
+    @action register = async (values: CorporateRegistrationFormValues) => {
+      try {
+        
+        runInAction(() => {
+          this.merchantRegistrationStatus = "loading";
+        });
+
+        const request = {
+          registrationNumber:values.registrationNumber,
+          password:values.password,
+          confirmPassword:values.confirmPassword
+        }
+        // console.log(request);
+        const response = await agent.User.register(request);
+        // console.log(response);
+        if (response.response) {
+          // throw false;
+          // this.rootStore.commonStore.setToken(response..token);
+          // this.rootStore.commonStore.setUser(response);
+          runInAction(() => {
+            this.merchantRegistrationStatus = "success";
+          });
+          
+        } else {
+          runInAction(() => {
+            this.merchantRegistrationStatus = response.message;
+          });
+          
+          
+        }
+        
+      } catch (error) {
+        // console.log(error);
+        runInAction(() => {
+          this.merchantRegistrationStatus  = "false";
+        });
+        // console.log(error)
+        // toast.error("Problem Submitting data");
+        throw error;
+      }
+    };
   
     @action getUser = async () => {
       try {
@@ -179,10 +230,15 @@ import { CorporateLoginFormValues, CustomerLoginFormValues, IUserFormValues } fr
         this.loginStatus = "loading";
         setTimeout(() => {
           window.localStorage.removeItem("jwt");
+          window.localStorage.removeItem("refreshToken");
+          window.localStorage.removeItem("mToken");
+          window.localStorage.removeItem("user");
+          window.localStorage.removeItem("profileStatus");
         }, 2000);
 
         setTimeout(() => {
           this.setLoginStatus("")
+          history.push("/");
         }, 2000);
       });
     };

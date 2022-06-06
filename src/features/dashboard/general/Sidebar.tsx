@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Icon, Menu } from "semantic-ui-react";
 import { BiUserCheck, BiCreditCard } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const Sidebar = (props: any) => {
   const { navName } = props;
+  const rootStore = useContext(RootStoreContext);
+  const { logout } = rootStore.userStore;
   return (
     <div className="sideBar d-none d-lg-inline my-3 ml-3 sticky-top">
       <h2 className=" font-weight-bolder text-white mb-0 pl-0">
@@ -38,7 +41,7 @@ const Sidebar = (props: any) => {
             <i className="fa-solid fa-arrow-right-arrow-left fa-rotate-90 "></i>
             <span>Reporting</span>
           </NavLink> */}
-          <a className="mb-3 log-outBox">
+          <a className="mb-3 log-outBox" onClick={logout}>
             <i className="fa-solid fa-arrow-right-from-bracket"></i>
             <span>Log out</span>
           </a>

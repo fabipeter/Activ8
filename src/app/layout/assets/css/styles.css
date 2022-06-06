@@ -319,6 +319,40 @@ border-radius: 3px;
   width: 130px;
   height: 63px;
 }
+.featuredStallsTabMenu .menu{
+  border-bottom: unset !important;
+}
+
+.vc_column_container .menu{
+  -webkit-box-align: center;
+  display: flex !important;
+  -webkit-align-items: center !important;
+ justify-content: center !important;
+  -ms-flex-align: center;
+}
+
+.vc_column_container .menu .active.item{
+  border-color:#bb8c46 !important ;
+}
+.qrScanner{
+  width: 300px!important;
+  height: 250px !important;
+  /* box-shadow: rgb(33, 241, 33) !important; */
+}
+
+.qrScanner #video{
+  top: 0px;
+left: 0px;
+z-index: 1;
+box-sizing: border-box;
+border: 50px solid rgba(0, 0, 0, 0.3);
+box-shadow: rgba(255, 0, 0, 0.5) 0px 0px 0px 5px inset !important;
+position: absolute;
+width: 100%;
+height: 100%;
+object-fit: cover;
+
+}
 /* =========================== end of General ==============================*/
 
 /* ========================== Login Page =========================== */
@@ -2038,7 +2072,7 @@ text-decoration: none;
   color: var(--white);
   border-radius: 5px;
   width: 1200px;
-  margin-top: 20%;
+  margin-top: 4%;
   max-width: 80vw;
   margin-right: auto;
   overflow: hidden;

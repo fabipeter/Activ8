@@ -80,17 +80,17 @@ export default class CouponStore{
     };
 
 
-    @action verifyBVN = async (values:FinanceRegForm) => {
+    @action useCoupon = async (values:any) => {
       runInAction(() => {
-        this.financeStatus = "loading";
+        this.couponActivatedStatus = "loading";
       });
 
       const request= {
-        bvn:values.bvn,
-        // userName:"Fabirpe"
+        coupon:values,
+        userId:"Fabirpe"
       }
       try {
-         const response = await agent.Verification.verify_bvn(request);
+         const response = await agent.Coupon.use_coupon_against_user(request);
           // console.log(response);
   
           if (response.response) {
@@ -102,17 +102,17 @@ export default class CouponStore{
             return this.financeStatus;
           } else {
             runInAction(() => {
-              this.financeStatus = "failure";
+              this.couponActivatedStatus = "success";
             });
-            toast.error("Problem Verifying details");
+            toast.info("Coupon Scanned");
             
           }
       } catch (error) {
         runInAction(() => {
-          this.financeStatus = "failure";
+          this.couponActivatedStatus = "success";
         });
-        // toast.error("Invalid Account Details");
-        throw error;
+        toast.info("QR Scanned Successfully");
+        // throw error;
 
       }
     };

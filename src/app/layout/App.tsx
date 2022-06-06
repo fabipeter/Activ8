@@ -13,19 +13,19 @@ import HomePage from "../../features/home/HomePage";
 import LoginPage from "../../features/authentication/login/LoginPage";
 import { RootStoreContext } from "../stores/rootStore";
 import NotFound from "../../features/NotFound";
-import ListStepPage from "../../features/authentication/register/ListStepPage";
 import RouteWithAuthorization from "./routes/RouteWithAuthorization";
 import DashboardAnalytics from "../../features/dashboard/core/DashboardAnalytics";
 import RouteWithCorporateDashboard from "./routes/RouteWithCorporateDashboard";
-import CorporateRegisterForm from "../../features/authentication/register/corporate/CorporateRegisterForm";
 import CouponPage from "../../features/dashboard/coupon/CouponPage";
 import GenerateCouponPage from "../../features/dashboard/coupon/GenerateCouponPage";
 import ScanCouponPage from "../../features/dashboard/coupon/ScanCouponPage";
+import LoginPage2 from "../../features/authentication/login/LoginPage2";
+import CorporateRegisterForm from "../../features/authentication/register/CorporateRegisterForm";
 
 const App: React.FC<RouteComponentProps> = () => {
   const rootStore = useContext(RootStoreContext);
   const {
-    mToken,
+    isLoggedIn,
     setAppLoaded,
     token,
     appLoaded,
@@ -33,13 +33,13 @@ const App: React.FC<RouteComponentProps> = () => {
     clearLocalStorage,
     getTokenRemainingTime,
   } = rootStore.commonStore;
-  // const {  } = rootStore.commonStore;
+  // const { getUser, isLoggedIn } = rootStore.userStore;
 
-  // const calculateTimeLeft = useCallback(() => {
-  //   return getTokenRemainingTime();
-  // }, [getTokenRemainingTime]);
+  const calculateTimeLeft = useCallback(() => {
+    return getTokenRemainingTime();
+  }, [getTokenRemainingTime]);
 
-  // const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
@@ -49,65 +49,65 @@ const App: React.FC<RouteComponentProps> = () => {
       // }
       setAppLoaded();
 
-      // const timer = setTimeout(() => {
-      //   setTimeLeft(calculateTimeLeft());
-      // }, 1000);
+      const timer = setTimeout(() => {
+        setTimeLeft(calculateTimeLeft());
+      }, 1000);
 
-      // if (mToken) {
-      //   // if (timeLeft < 160000) {
-      //   //   console.log(timeLeft);
-      //   //   console.log(refresh);
-      //   //   // clearLocalStorage();
-      //   // }
-      //   // console.log(timeLeft);
-      //   if (timeLeft > 0 && timeLeft < 120000 && refresh) {
-      //     setRefresh(false);
+      if (atob(isLoggedIn!.split("secretKey=Activ8")[1]) === token) {
+        // if (timeLeft < 160000) {
+        //   console.log(timeLeft);
+        //   console.log(refresh);
+        //   // clearLocalStorage();
+        // }
+        // console.log(timeLeft);
+        if (timeLeft > 0 && timeLeft < 120000 && refresh) {
+          setRefresh(false);
 
-      //     try {
-      //       tokenRefresh()
-      //         .then((data) => (!data.ok ? data : data.json()))
-      //         .then((data) => {
-      //           if (data.accessToken) {
-      //             const { refreshToken, accessToken } = data;
-      //             window.localStorage.setItem("jwt", accessToken);
-      //             window.localStorage.setItem("refreshToken", refreshToken);
-      //             // console.log("refreshed");
-      //             setTimeLeft(calculateTimeLeft());
-      //             setRefresh(true);
-      //           } else {
-      //             // console.log("retrying refresh...");
-      //             // setTimeLeft(calculateTimeLeft());
-      //             // setRefresh(true);
-      //             clearLocalStorage();
-      //             history.push("/");
-      //           }
-      //         });
-      //     } catch {
-      //       clearLocalStorage();
-      //       history.push("/");
-      //     }
-      //   } else if (timeLeft < 0) {
-      //     clearLocalStorage();
-      //     history.push("/");
-      //   }
+          try {
+            tokenRefresh()
+              .then((data) => (!data.ok ? data : data.json()))
+              .then((data) => {
+                if (data.accessToken) {
+                  const { refreshToken, accessToken } = data;
+                  window.localStorage.setItem("jwt", accessToken);
+                  window.localStorage.setItem("refreshToken", refreshToken);
+                  // console.log("refreshed");
+                  setTimeLeft(calculateTimeLeft());
+                  setRefresh(true);
+                } else {
+                  // console.log("retrying refresh...");
+                  // setTimeLeft(calculateTimeLeft());
+                  // setRefresh(true);
+                  clearLocalStorage();
+                  history.push("/");
+                }
+              });
+          } catch {
+            clearLocalStorage();
+            history.push("/");
+          }
+        } else if (timeLeft < 0) {
+          clearLocalStorage();
+          history.push("/");
+        }
 
-      //   return () => clearTimeout(timer);
-      // }
+        return () => clearTimeout(timer);
+      }
     } else {
       setAppLoaded();
     }
   }, [
-    // mToken,
+    isLoggedIn,
     setAppLoaded,
     token,
-    // timeLeft,
-    // refresh,
-    // setRefresh,
-    // tokenRefresh,
-    // getTokenRemainingTime,
-    // clearLocalStorage,
-    // setTimeLeft,
-    // calculateTimeLeft,
+    timeLeft,
+    refresh,
+    setRefresh,
+    tokenRefresh,
+    getTokenRemainingTime,
+    clearLocalStorage,
+    setTimeLeft,
+    calculateTimeLeft,
   ]);
 
   if (!appLoaded) return <LoadingSpinner />;
@@ -119,7 +119,8 @@ const App: React.FC<RouteComponentProps> = () => {
       <Switch>
         {/* <h1>hsdf</h1> */}
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/login" component={LoginPage} />
+        {/* <Route exact path="/login" component={LoginPage} /> */}
+        <Route exact path="/login" component={LoginPage2} />
         <Route exact path="/register" component={CorporateRegisterForm} />
         {/* <Route exact path="/finance" component={FinanceForm} /> */}
 

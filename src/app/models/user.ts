@@ -4,7 +4,7 @@ export interface IUserFormValues {
   }
   
   export class CustomerLoginFormValues {
-    email: string ="";
+    emailAddress: string ="";
     password: string ="";
   }
 
@@ -134,13 +134,7 @@ export interface IUserFormValues {
 
 
   export class CorporateRegistrationFormValues {
-    bvn: string = "";
-    tin: string = "";
-    isStaff:boolean = false;
-    staffId: string = "";
-    safAccountNumber: string = "";
-    email: string = "";
+    registrationNumber: string = "";
     password: string = "";
     confirmPassword: string = "";
-    accountType : number = 0;
   }

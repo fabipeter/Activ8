@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
-import { CorporateLoginFormValues, CustomerLoginFormValues, IRefreshToken, IUserFormValues, IValidOTP } from "../models/user";
+import { CorporateLoginFormValues, CorporateRegistrationFormValues, CustomerLoginFormValues, IRefreshToken, IUserFormValues, IValidOTP } from "../models/user";
 import jwt_decode from "jwt-decode";
 import { CustomerRegistrationFormValues, ICustomer, SecurityQuestion } from "../models/customer";
 import { DeleteRoleFormValues, IRole, IUserRoleDetails, RoleFormValues, UserRoleUpdateFormValues } from "../models/role";
@@ -69,12 +69,12 @@ axios.interceptors.response.use(undefined, (error) => {
     headerContent.includes('Bearer error="invalid_token"')
   ) {
     // console.log(headerContent)
-    window.localStorage.removeItem("jwt");
-    window.localStorage.removeItem("refreshToken");
-    window.localStorage.removeItem("user");
-    window.localStorage.removeItem("profileStatus");
-    history.push("/");
-    toast.info("Your session has expired, please login again");
+    // window.localStorage.removeItem("jwt");
+    // window.localStorage.removeItem("refreshToken");
+    // window.localStorage.removeItem("user");
+    // window.localStorage.removeItem("profileStatus");
+    // history.push("/");
+    // toast.info("Your session has expired, please login again");
   }
   if (status === 204) {
     toast.info("no content");
@@ -134,9 +134,11 @@ const User = {
   current: (id: IRefreshToken): Promise<any> =>
     requests.post(`/AdminAuthentication/RefreshToken`, id),
   login: (user: CustomerLoginFormValues): Promise<any> =>
-    requests.post(`/Customer/login-customer`, user),
+    requests.post(`/Authentication/UserAuthentication`, user),
   corporate_login: (user: CorporateLoginFormValues): Promise<any> =>
-    requests.post(`/Admin/corporate-login`, user),
+    requests.post(`/Altsub_Merchant/AuthenticateMerchant`, user),
+  register: (merchant: CorporateRegistrationFormValues): Promise<any> =>
+    requests.put(`/Altsub_Merchant/UpdateMerchantPassword`, merchant),
   validateMToken: (details: IValidOTP): any =>
     requests.post(`/Admin/validate-mtoken`, details),
   logoff: (id: string) => requests.get(`/AdminAuthentication/AdminLogOff`),
@@ -168,9 +170,9 @@ const Verification = {
 
 const Coupon = {
   generate_coupons: (request: any): Promise<any> =>
-    requests.post(`/Finance/CreateNewFinanceApplication`, request),
-  document_upload: (request: DocumentFiles): Promise<any> =>
-    requests.uploadFinanceDocument(`/Finance/DocumentUpload`, request),
+    requests.post(`/Altsub_Coupon/GenerateCoupon`, request),
+  use_coupon_against_user: (request: any): Promise<any> =>
+    requests.get(`/Altsub_Coupon/UseCouponAgainstUser?coupon=${request.coupon}&UserId=${request.userId}`),
 };
 const Customer = {
   confirmEmail: (): any =>
@@ -181,8 +183,8 @@ const Customer = {
     requests.get(
       `/Customer/SecurityQuestion`
     ),
-  register: (customer: CustomerRegistrationFormValues): Promise<any> =>
-    requests.post(`/Customer/create-account`, customer),
+  register: (merchant: CorporateRegistrationFormValues): Promise<any> =>
+    requests.put(`/Altsub_Merchant/UpdateMerchantPassword`, merchant),
   getRegisteredCustomer: (email: string): any =>
     requests.get(`/Customer/GetCustomerRegistration?EmailAddress=${email}`),
   deleteCustomer: (Id: number): Promise<any> =>

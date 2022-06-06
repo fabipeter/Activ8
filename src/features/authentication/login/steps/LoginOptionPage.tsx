@@ -24,7 +24,7 @@ const LoginOptionPage = (props: any) => {
   return (
     <Fragment>
       <div className="commonPageWrapper">
-        <div className="pt-5 pl-5">
+        <div className="pt-2 pl-5">
           <a className="cursorPointer" onClick={() => history.push("/")}>
             <div className="backNav">
               <img src="./images/blackArrow.svg" alt="" />
@@ -32,7 +32,7 @@ const LoginOptionPage = (props: any) => {
             </div>
           </a>
         </div>
-        <div className="d-flex justify-content-center align-content-center pt-5">
+        <div className="d-flex justify-content-center align-content-center pt-2">
           <div className="col-lg-5 px-5 py-2 ">
             <img
               src="./images/ACTIV8 SVG (1).svg"

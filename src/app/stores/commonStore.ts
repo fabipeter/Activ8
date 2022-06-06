@@ -36,12 +36,12 @@ export default class CommonStore {
     );
 
     reaction(
-      () => this.mToken,
-      (mToken) => {
-        if (mToken) {
-          window.localStorage.setItem("mToken", mToken);
+      () => this.isLoggedIn,
+      (isLoggedIn) => {
+        if (isLoggedIn) {
+          window.localStorage.setItem("isLoggedIn", isLoggedIn);
         } else {
-          window.localStorage.removeItem("mToken");
+          window.localStorage.removeItem("isLoggedIn");
         }
       }
     );
@@ -73,7 +73,7 @@ export default class CommonStore {
   }
 
 
-  @observable mToken: any | null = window.localStorage.getItem("mToken");
+  @observable isLoggedIn: string|null = window.localStorage.getItem("isLoggedIn");
   @observable token: string | null = window.localStorage.getItem("jwt");
   @observable refreshToken: string | null =
     window.localStorage.getItem("refreshToken");
@@ -88,8 +88,8 @@ export default class CommonStore {
   @observable collapse = false;
   @observable redirectStatus = "";
 
-  @action setmToken = (token: any | null) => {
-    this.mToken = token;
+  @action setisLoggedIn = () => {
+    this.isLoggedIn = btoa(`secretKey=Activ8${this.token}`);
   };
   @action setToken = (token: string | null) => {
     this.token = token;
@@ -236,7 +236,7 @@ export default class CommonStore {
   @action clearLocalStorage() {
     window.localStorage.removeItem("jwt");
     window.localStorage.removeItem("refreshToken");
-    window.localStorage.removeItem("mToken");
+    window.localStorage.removeItem("isLoggedIn");
     window.localStorage.removeItem("user");
     window.localStorage.removeItem("profileStatus");
     history.push("/");  

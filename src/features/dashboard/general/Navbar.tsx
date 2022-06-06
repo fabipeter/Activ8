@@ -11,9 +11,10 @@ const Navbar = (props: any) => {
   const { logout } = rootStore.userStore;
   const [collapse, setCollapse] = useState(false);
   const loggedInUser = JSON.parse(window.localStorage.getItem("user")!);
-  const mToken = window.localStorage.getItem("mToken");
+  // const mToken = window.localStorage.getItem("mToken");
 
   const [showDropDown, setShowDropDown] = useState(false);
+  const [showBellDropDown, setShowBellDropDown] = useState(false);
 
   // useEffect(() => {
   //   window.addEventListener("scroll", handleOnScroll);
@@ -35,7 +36,8 @@ const Navbar = (props: any) => {
         <img src="/images/welcome-Icon.svg" alt="" />
         <div className="text-white">
           <span>
-            <b>Welcome</b> Fred
+            <b>Welcome</b>
+            {/* {loggedInUser.fullname} */}
           </span>
           <br /> <span className="small">Product Team</span>
         </div>
@@ -83,21 +85,27 @@ const Navbar = (props: any) => {
           className="d-flex col-md-3 justify-content-md-around mx-0"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <div className={showDropDown ? "col dropdown show" : "col dropdown"}>
+          <div
+            className={showBellDropDown ? "col dropdown show" : "col dropdown"}
+          >
             <img
               src="/images/bell-icon.svg"
               alt=""
               className=" pt-4 ml-lg-5 bell-position dropdown-toggle"
               data-toggle="dropdown"
-              onClick={() => setShowDropDown(!showDropDown)}
+              onClick={() => setShowBellDropDown(!showBellDropDown)}
             />
-            <span className="badge badge-light ml-lg-5" data-toggle="dropdown">
+            <span
+              className="badge badge-light ml-lg-5 cursorPointer"
+              data-toggle="dropdown"
+              onClick={() => setShowBellDropDown(!showBellDropDown)}
+            >
               3
             </span>
 
             <div
               className={
-                showDropDown
+                showBellDropDown
                   ? "dropdown-menu dropdown-menu-center bell-container show"
                   : "dropdown-menu dropdown-menu-center bell-container"
               }
@@ -163,33 +171,31 @@ const Navbar = (props: any) => {
               navName === "Dashboard" ? "mb-3 active px-3" : "mb-3 px-3"
             }
             id="hide_sideBar_remake"
+            onClick={() => setCollapse(false)}
           >
             <i className="fa-solid fa-house"></i>
             <span>Dashboard</span>
           </NavLink>
-          <NavLink
+
+          {/* <NavLink
             to="/dashboard/msme"
             className={navName === "MSME" ? "mb-3 active px-3" : "mb-3 px-3"}
             id="hide_sideBar_remake"
           >
             <i className="fa-solid fa-file-arrow-up"></i>
             <span> MSME</span>
-          </NavLink>
+          </NavLink> */}
+
           <NavLink
-            to="/dashboard/reporting"
-            className={
-              navName === "Reporting" ? "mb-3 active px-3" : "mb-3 px-3"
-            }
+            to="/dashboard/coupon"
+            className={navName === "Coupon" ? "mb-3 active px-3" : "mb-3 px-3"}
             id="hide_sideBar_remake"
+            onClick={() => setCollapse(false)}
           >
-            <i className="fa-solid fa-arrow-right-arrow-left"></i>
-            <span>Reporting</span>
+            <i className="fas fa-ticket-alt"></i>
+            <span>Coupon</span>
           </NavLink>
-          <a
-            href="login-dashboard.html"
-            id="hide_sideBar_remake"
-            className="mb-3 px-3"
-          >
+          <a onClick={logout} id="hide_sideBar_remake" className="mb-3 px-3">
             <i className="fa-solid fa-arrow-right-from-br/acket"></i>
             <span>Log out</span>
           </a>

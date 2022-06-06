@@ -28,7 +28,7 @@ const isValidEmail = createValidator(
   "Invalid email address"
 );
 const validate = combineValidators({
-  email: composeValidators(isRequired("Email"), isValidEmail)(),
+  emailAddress: composeValidators(isRequired("Email"), isValidEmail)(),
   password: isRequired("Password"),
 });
 
@@ -101,9 +101,9 @@ const CustomerLoginPage = (props: any) => {
                 <Field
                   disabled={loginLoading}
                   type="text"
-                  id="email"
+                  id="emailAddress"
                   className="form-control"
-                  name="email"
+                  name="emailAddress"
                   component={TextInput}
                   placeholder="Enter email address"
                   autoComplete="off"

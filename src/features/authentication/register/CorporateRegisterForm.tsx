@@ -8,29 +8,30 @@ import {
   composeValidators,
   isRequired,
   hasLengthBetween,
+  isNumeric,
   hasLengthGreaterThan,
   matchesField,
-  isNumeric,
 } from "revalidate";
-import { Form, Button, Message } from "semantic-ui-react";
-import OnboardingTextInput from "../../../../../app/common/form/customized/onboarding/OnboardingTextInput";
-import ErrorMessage from "../../../../../app/common/form/general/ErrorMessage";
-import PasswordInput from "../../../../../app/common/form/general/PasswordInput";
-import { RootStoreContext } from "../../../../../app/stores/rootStore";
-import LoadingModal from "../../../../general/LoadingModal";
+import { Form, Button } from "semantic-ui-react";
+import { history } from "../../..";
+import OnboardingTextInput from "../../../app/common/form/customized/onboarding/OnboardingTextInput";
+import SelectInput from "../../../app/common/form/customized/SelectInput";
+import ErrorMessage from "../../../app/common/form/general/ErrorMessage";
+import PasswordInput from "../../../app/common/form/general/PasswordInput";
+import { statusValue } from "../../../app/common/options/StatusOptions";
+import { CorporateLoginFormValues } from "../../../app/models/user";
+import { RootStoreContext } from "../../../app/stores/rootStore";
+import LoadingModal from "../../general/LoadingModal";
 
-const SixthCorporateStep = (props: any) => {
-  const { inputField, handleChange, next, setInputField, back, accountType } =
-    props;
+const CorporateRegisterForm = () => {
+  const [inputField, setInputField] = useState(new CorporateLoginFormValues());
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target.name, e.target.value);
+    setInputField({ ...inputField, [e.target.name]: e.target.value });
+    // setInputField(inputField);
+  };
   const rootStore = useContext(RootStoreContext);
-  const {
-    register,
-    setActivatedStatus,
-    setRegistrationStatus,
-    customerActivatedStatus,
-    customerRegistrationStatus,
-  } = rootStore.customerStore;
-
+  const { register, merchantRegistrationStatus } = rootStore.userStore;
   const [isPasswordShown, togglePasswordVisiblity] = useState(false);
   const [isConfirmPasswordShown, toggleConfirmPasswordVisiblity] =
     useState(false);
@@ -41,6 +42,14 @@ const SixthCorporateStep = (props: any) => {
     setInputField({ ...inputField, [e.target.name]: e.target.value });
     // setInputField(inputField);
   };
+  const isValidEmail = createValidator(
+    (message) => (value) => {
+      if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        return message;
+      }
+    },
+    "Invalid email address"
+  );
 
   const containsUppercaseLetter = createValidator(
     (message) => (value) => {
@@ -79,9 +88,16 @@ const SixthCorporateStep = (props: any) => {
   );
 
   const validate = combineValidators({
-    username: composeValidators(
-      isRequired("Username"),
-      hasLengthGreaterThan(4)("Username")
+    // email: composeValidators(isRequired("Email Address"), isValidEmail)(),
+    registrationNumber: composeValidators(
+      isRequired("Registration Number"),
+      isNumeric("Registration Number"),
+      hasLengthBetween(
+        11,
+        11
+      )({
+        message: "Invalid",
+      })
     )(),
     password: composeValidators(
       isRequired("Password"),
@@ -99,33 +115,11 @@ const SixthCorporateStep = (props: any) => {
     }),
   });
 
-  useEffect(() => {
-    setActivatedStatus("");
-    if (customerRegistrationStatus === "success") {
-      setActivatedStatus("");
-      setRegistrationStatus("");
-      next();
-    } else {
-      setActivatedStatus("");
-    }
-  }, [
-    setActivatedStatus,
-    setRegistrationStatus,
-    customerRegistrationStatus,
-    next,
-  ]);
-
   return (
     <div className="commonPageWrapper">
-      {customerRegistrationStatus === "loading" && <LoadingModal />}
-      <div className="pt-5 pl-5">
-        <a
-          className="cursorPointer"
-          onClick={() => {
-            setRegistrationStatus("");
-            back();
-          }}
-        >
+      {merchantRegistrationStatus === "loading" && <LoadingModal />}
+      <div className="pt-2 pl-5">
+        <a className="cursorPointer" onClick={() => history.push("/")}>
           <div className="backNav">
             <img src="./images/blackArrow.svg" alt="" />
             <span>Back</span>
@@ -135,8 +129,8 @@ const SixthCorporateStep = (props: any) => {
       <div className="d-flex justify-content-center align-content-center">
         <FinalForm
           // className="col-lg-5 p-5"
-          onSubmit={() =>
-            register(inputField, accountType).catch((error) => ({
+          onSubmit={(inputField) =>
+            register(inputField).catch((error) => ({
               [FORM_ERROR]: error,
             }))
           }
@@ -149,26 +143,45 @@ const SixthCorporateStep = (props: any) => {
             pristine,
             dirtySinceLastSubmit,
           }) => (
-            <Form className="col-lg-5 p-5" onSubmit={handleSubmit}>
+            <Form className="col-lg-5 py-2 px-5" onSubmit={handleSubmit}>
               <img
-                src="./images/AlternativeFinanceLogo.svg"
-                className="mx-auto d-block mb-3"
+                src="./images/ACTIV8 SVG (1).svg"
+                className="mx-auto d-block mb-1 logoSize"
                 alt="Alt Finance Logo"
               />
-              <div className="text-center spanTittle">
-                Create Username & Password{" "}
+              <div className="text-center spanTittle">Let us Onboard You</div>
+              <div className="text-center">
+                Please input your
+                {/* <b>Email Address</b> and{" "} */}
+                {" "}
+                <b>Registration Number</b>
               </div>
-              <div className="form-group mt-3">
-                <label htmlFor="username">User Name (SAF Account Number)</label>
+              {/* <div className="form-group mt-3">
+                <label htmlFor="email">Email Address</label>
                 <Field
                   type="text"
-                  id="username"
-                  initialValue={inputField.username}
+                  id="email"
+                  initialValue={inputField.email}
                   fieldClassName="m-0"
                   className="form-control"
-                  name="username"
+                  name="email"
                   component={OnboardingTextInput}
-                  placeholder="Enter Username"
+                  placeholder="Enter email address"
+                  autoComplete="off"
+                  onChange={handleChange}
+                />
+              </div> */}
+              <div className="form-group">
+                <label htmlFor="bvnNo">Company Registration Number</label>
+                <Field
+                  type="text"
+                  id="registrationNumber"
+                  initialValue={inputField.registrationNumber}
+                  className="form-control"
+                  name="registrationNumber"
+                  component={OnboardingTextInput}
+                  placeholder="Enter Registration Number"
+                  autoComplete="off"
                   onChange={handleChange}
                 />
               </div>
@@ -212,23 +225,17 @@ const SixthCorporateStep = (props: any) => {
                 <ErrorMessage
                   className="loginFormError"
                   error={submitError}
-                  text="Problem Submitting details"
+                  text="Invalid Account Details"
                 />
               )}
-              {customerRegistrationStatus.includes("exist") &&
-                !dirtySinceLastSubmit && (
-                  <Message className="loginFormError" negative>
-                    <p>{customerRegistrationStatus}</p>
-                  </Message>
-                )}
               <div className="form-group mt-5">
                 <Button
                   id="longButton"
-                  className="w-100 longButton px-3 "
-                  disabled={invalid && !dirtySinceLastSubmit}
+                  className="btn w-100 longButton px-3 "
+                  disabled={(invalid && !dirtySinceLastSubmit) || pristine}
                   loading={submitting}
                 >
-                  <div>Create my account</div>
+                  <div>Continue</div>
                   <img
                     className="my-auto"
                     src="./images/whiteArrow.svg"
@@ -237,9 +244,9 @@ const SixthCorporateStep = (props: any) => {
                 </Button>
               </div>
               <p className="text-center grey-Medium_Bold-texts">
-                I have a username and password,
+                Existing User?
                 <span className="purpleTexts sign_Up_Link">
-                  {/* <a onClick={() => history.push("/login")}>Log in</a> */}
+                  <a onClick={() => history.push("/login")}>Log in</a>
                 </span>
               </p>
             </Form>
@@ -250,4 +257,4 @@ const SixthCorporateStep = (props: any) => {
   );
 };
 
-export default observer(SixthCorporateStep);
+export default observer(CorporateRegisterForm);

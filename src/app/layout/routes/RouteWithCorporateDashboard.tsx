@@ -11,6 +11,7 @@ import NewSideBar from "../../../features/dashboard/general/NewSideBar";
 import Sidebar from "../../../features/dashboard/general/Sidebar";
 import { RootStoreContext } from "../../stores/rootStore";
 import jwt_decode from "jwt-decode";
+import LoadingModal from "../../../features/general/LoadingModal";
 
 interface IProps extends RouteProps {
   component: React.ComponentType<RouteComponentProps<any>>;
@@ -29,10 +30,11 @@ const RouteWithCorporateDashboard: React.FC<IProps> = ({
   ...rest
 }) => {
   const rootStore = useContext(RootStoreContext);
-  const { mToken, token } = rootStore.commonStore;
+  const { token } = rootStore.commonStore;
+  const {loginStatus} = rootStore.userStore;
   const decodedSub = {
-    role:"Merchant"
-  }
+    role: "Merchant",
+  };
   // const decoded = JSON.parse(JSON.stringify(jwt_decode(token!)));
   return (
     <Route
@@ -45,6 +47,7 @@ const RouteWithCorporateDashboard: React.FC<IProps> = ({
         ) : (
           <>
             <div className="wrapper d-flex" style={{ gap: "2px" }}>
+              {loginStatus === "loading" && <LoadingModal />}
               <Sidebar navName={navName} />
               <div className="inner-wrapper col container-fluid px-0 mx-3 my-3">
                 <Navbar navName={navTitle} subNavName={subNavName} />
