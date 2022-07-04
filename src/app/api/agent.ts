@@ -1,11 +1,35 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
-import { CorporateLoginFormValues, CorporateRegistrationFormValues, CustomerLoginFormValues, IRefreshToken, IUserFormValues, IValidOTP } from "../models/user";
+import {
+  ChangePasswordFormValues,
+  CorporateLoginFormValues,
+  CorporateRegistrationFormValues,
+  CustomerLoginFormValues,
+  IRefreshToken,
+  IUserFormValues,
+  IValidOTP,
+} from "../models/user";
 import jwt_decode from "jwt-decode";
-import { CustomerRegistrationFormValues, ICustomer, SecurityQuestion } from "../models/customer";
-import { DeleteRoleFormValues, IRole, IUserRoleDetails, RoleFormValues, UserRoleUpdateFormValues } from "../models/role";
-import { BVNVerification, DSRCheck, OTPRegVerification, SafAccountVerification,TenPercentCheck } from "../models/verification";
+import {
+  CustomerRegistrationFormValues,
+  ICustomer,
+  SecurityQuestion,
+} from "../models/customer";
+import {
+  DeleteRoleFormValues,
+  IRole,
+  IUserRoleDetails,
+  RoleFormValues,
+  UserRoleUpdateFormValues,
+} from "../models/role";
+import {
+  BVNVerification,
+  DSRCheck,
+  OTPRegVerification,
+  SafAccountVerification,
+  TenPercentCheck,
+} from "../models/verification";
 import { CreateFinance, DocumentFiles } from "../models/finance";
 
 // axios.defaults.headers['Content-Type'] = 'application/json'
@@ -17,7 +41,7 @@ axios.interceptors.request.use(
     const token = window.localStorage.getItem("jwt");
 
     if (token) {
-      const decoded = JSON.parse(JSON.stringify(jwt_decode(token!))); 
+      const decoded = JSON.parse(JSON.stringify(jwt_decode(token!)));
       // Get Current Date Time
       const date = new Date(0);
 
@@ -61,7 +85,7 @@ axios.interceptors.response.use(undefined, (error) => {
 
   if (status === 404) {
     // history.push("/notfound");
-    throw error.response
+    throw error.response;
   }
   if (
     status === 401 &&
@@ -80,7 +104,7 @@ axios.interceptors.response.use(undefined, (error) => {
     toast.info("no content");
   }
   if (status === 400 && config.method === "get") {
-    history.push("/notfound");
+    // history.push("/notfound");
   }
   if (status === 204 && config.method === "get") {
     history.push("/notfound");
@@ -92,12 +116,10 @@ axios.interceptors.response.use(undefined, (error) => {
     toast.error("Server error ");
   }
   // toast.error(error.message)
-  throw error
+  throw error;
 });
 
 const responseBody = (response: AxiosResponse) => response.data;
-
-
 
 const requests = {
   get: (url: string) => axios.get(url).then(responseBody),
@@ -105,7 +127,7 @@ const requests = {
   put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
   del: (url: string) => axios.delete(url).then(responseBody),
   postForm: (url: string, request: any) => {
-        return axios
+    return axios
       .post(url, request, {
         headers: { "Content-type": "multipart/form-data" },
       })
@@ -121,39 +143,38 @@ const requests = {
     formData.append("ReferenceLetter", request.ReferenceLetter);
     formData.append("BoardResolution", request.BoardResolution);
     return axios
-  .post(url, formData, {
-    headers: { "Content-type": "multipart/form-data" },
-  })
-  .then(responseBody);
-},
+      .post(url, formData, {
+        headers: { "Content-type": "multipart/form-data" },
+      })
+      .then(responseBody);
+  },
 };
-
-
 
 const User = {
   current: (id: IRefreshToken): Promise<any> =>
     requests.post(`/AdminAuthentication/RefreshToken`, id),
   login: (user: CustomerLoginFormValues): Promise<any> =>
     requests.post(`/Authentication/UserAuthentication`, user),
-  corporate_login: (user: CorporateLoginFormValues): Promise<any> =>
+  corporate_login: (user: CustomerLoginFormValues): Promise<any> =>
     requests.post(`/Altsub_Merchant/AuthenticateMerchant`, user),
   register: (merchant: CorporateRegistrationFormValues): Promise<any> =>
-    requests.put(`/Altsub_Merchant/UpdateMerchantPassword`, merchant),
+    requests.put(`/Altsub_Merchant/OnBoardMerchant`, merchant),
+  reset_password: (request: {}): Promise<any> =>
+    requests.post(`/Altsub_Merchant/ResetPassword`, request),
+  change_password: (request: ChangePasswordFormValues): Promise<any> =>
+    requests.post(`/Altsub_Merchant/ChangePassword`, request),
   validateMToken: (details: IValidOTP): any =>
-    requests.post(`/Admin/validate-mtoken`, details),
+    requests.post(`/Altsub_Merchant/validateOTP`, details),
   logoff: (id: string) => requests.get(`/AdminAuthentication/AdminLogOff`),
-  
 };
-
-
 
 const Verification = {
   verify_saf_account: (request: SafAccountVerification): Promise<any> =>
     requests.post(`/Verification/saf-account-verification`, request),
-  verify_saf_otp:(request: OTPRegVerification): Promise<any> =>
-  requests.post(`/Verification/confirm-saf-otp`, request),
-  verify_otp:(request: OTPRegVerification): Promise<any> =>
-  requests.post(`/Verification/confirm-otp`, request),
+  verify_saf_otp: (request: OTPRegVerification): Promise<any> =>
+    requests.post(`/Verification/confirm-saf-otp`, request),
+  verify_otp: (request: OTPRegVerification): Promise<any> =>
+    requests.post(`/Verification/confirm-otp`, request),
   verify_tin: (request: string): Promise<any> =>
     requests.get(`/Verification/tin-verification?tin=${request}`),
   verify_bvn: (request: BVNVerification): Promise<any> =>
@@ -172,17 +193,16 @@ const Coupon = {
   generate_coupons: (request: any): Promise<any> =>
     requests.post(`/Altsub_Coupon/GenerateCoupon`, request),
   use_coupon_against_user: (request: any): Promise<any> =>
-    requests.get(`/Altsub_Coupon/UseCouponAgainstUser?coupon=${request.coupon}&UserId=${request.userId}`),
+    requests.get(
+      `/Altsub_Coupon/UseCouponAgainstUser?coupon=${request.coupon}`
+    ),
+  list_generated_coupon: (): Promise<any> =>
+    requests.get(`/Altsub_Coupon/ListGeneratedCoupon`),
 };
 const Customer = {
-  confirmEmail: (): any =>
-    requests.get(
-      `/Customer/confirm-email`
-    ),
+  confirmEmail: (): any => requests.get(`/Customer/confirm-email`),
   getSecurityQuestions: (): Promise<SecurityQuestion[]> =>
-    requests.get(
-      `/Customer/SecurityQuestion`
-    ),
+    requests.get(`/Customer/SecurityQuestion`),
   register: (merchant: CorporateRegistrationFormValues): Promise<any> =>
     requests.put(`/Altsub_Merchant/UpdateMerchantPassword`, merchant),
   getRegisteredCustomer: (email: string): any =>
@@ -191,12 +211,8 @@ const Customer = {
     requests.del(`/Customer/delete?Id=${Id}`),
 };
 
-
 const Stall = {
-  get_stalls: (): Promise<any[]>  =>
-    requests.get(
-      `/Stall/get-stalls`
-    ),
+  get_stalls: (): Promise<any[]> => requests.get(`/Stall/get-stalls`),
   // updatePackage: (Package: IPackage): Promise<any> =>
   //   requests.put(`/AltsubCardSubscriptionTypes/UpdateAltsubCardSubscriptionTypes`, Package),
   // editPackage: (Package: StallFormValues): Promise<any> =>
@@ -205,19 +221,11 @@ const Stall = {
   //   requests.del(`/AltsubCardSubscriptionTypes/delete?Id=${Id}`),
 };
 
-
-
 const Role = {
-  getAllRoles: (): Promise<any[]> =>
-    requests.get(
-      `/Role/Getallrole`
-    ),
-  getAllUserRoles: (): any =>
-    requests.get(
-      `/UserRole/GetAll`
-    ),
+  getAllRoles: (): Promise<any[]> => requests.get(`/Role/Getallrole`),
+  getAllUserRoles: (): any => requests.get(`/UserRole/GetAll`),
   activateDeactivateRole: (user: UserRoleUpdateFormValues): Promise<any> =>
-  requests.post(`/UserRole/ActivateDeactivate`, user),
+    requests.post(`/UserRole/ActivateDeactivate`, user),
   updateUserRole: (user: UserRoleUpdateFormValues): Promise<any> =>
     requests.post(`/UserRole/update`, user),
   verifyUser: (user: IUserRoleDetails): Promise<any> =>
@@ -225,9 +233,8 @@ const Role = {
   createRole: (user: RoleFormValues): Promise<any> =>
     requests.post(`/Role/createrole`, user),
   deleteUserRole: (userRole: DeleteRoleFormValues): Promise<any> =>
-    requests.post(`/UserRole/delete`,userRole),
+    requests.post(`/UserRole/delete`, userRole),
 };
-
 
 const agent = {
   // Properties,

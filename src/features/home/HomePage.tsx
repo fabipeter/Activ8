@@ -27,11 +27,7 @@ const HomePage = () => {
             className="navbar-brand d-md-inline d-none pr-5"
             onClick={() => history.push("/")}
           >
-            <img
-              src="./images/ACTIV8 SVG (1).svg"
-              className=" logoSize"
-              alt=""
-            />
+            <img src="/images/logo.svg" className=" logoSize" alt="" />
           </a>
           <button
             className="navbar-toggler"
@@ -61,7 +57,7 @@ const HomePage = () => {
                   Home
                 </a>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <a
                   className="nav-link mr-5 pt-4 "
                   onClick={() => history.push("/")}
@@ -81,7 +77,7 @@ const HomePage = () => {
                 <a className="nav-link pt-4" onClick={() => history.push("/")}>
                   FAQs
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -95,7 +91,7 @@ const HomePage = () => {
               id="navbarNavAltMarkup"
             >
               {loginStatus === "true" || loginStatus === "loading" ? (
-                <div className="">
+                <div className="mr-5">
                   <span
                     id="navbarDropdown"
                     className=""
@@ -115,9 +111,9 @@ const HomePage = () => {
                     <Dropdown.Menu>
                       <Dropdown.Item
                         as={Link}
-                        to={"/finance"}
-                        text="Financing"
-                        icon="gg"
+                        to={"/dashboard/analytics"}
+                        text="Dashboard"
+                        icon="tasks"
                       />
                       <Dropdown.Item
                         onClick={logout}
@@ -133,33 +129,38 @@ const HomePage = () => {
                   style={{ cursor: "Pointer" }}
                   onClick={() => history.push("/login")}
                 >
-                  <a className="nav-link pr-5">Login</a>
+                  <a className="nav-link pr-5 ">Login</a>
                 </li>
               )}
             </div>
-            <li className="nav-item">
-              <button
-                className="register_button"
-                type="button"
-                onClick={() => history.push("/register")}
-              >
-                Register
-              </button>
-            </li>
+            {loginStatus === "" && (
+              <li className="nav-item">
+                <button
+                  className="register_button"
+                  type="button"
+                  onClick={() => history.push("/register")}
+                >
+                  Register
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </nav>
       <section className="row mx-0 p-0 col-md-12 section_One mt-sm-3 pb-5">
         <div className="hero col-md justify-content-lg-start hero-text pt-md-5 pl-md-5 ">
           <h1 className="mt-5 pt-md-5 welcome_text pl-lg-4">
-            Welcome to world of <br /> <b>financing</b> opportunities
+            <b>Activ8 LifeStyle Discounts.</b>
           </h1>
           <div className="welcome_para mb-4 mt-4 pl-lg-4">
-            With ACTIV8, you have multiple financing options <br />
-            to meet your needs at affordable rate
+            Join other Activ8 members who have direct access to thousands of
+            discounts across every aspect of their daily life.
           </div>
           <div className=" d-flex justify-content-lg-start pl-lg-4">
-            <button className="getStarted_button text-white d-flex justify-content-between">
+            <button
+              className="getStarted_button text-white d-flex justify-content-between"
+              onClick={() => history.push("/login")}
+            >
               Get started{" "}
               <span>
                 <img src="./images/white_arrow.svg" alt="" />
@@ -180,20 +181,24 @@ const HomePage = () => {
       <section className="col-md-12 pb-3">
         <div className="col-md-12  text-center py-5">
           <h1 className="welcome_text">
-            <b>Our Products</b>
+            <b>Our Partners</b>
           </h1>
         </div>
         <div className="mx-0 p-0 cards_wrapper">
           <div className="cards">
             <div className="card-body">
-              <h1>HAJJ</h1>
+              <h1>Activ8</h1>
               <p className="mb-5">
-                Let us support you to achieve your Hajj and{" "}
-                <br className="d-none d-md-inline" /> Ummrah Dream
+                Let us Partner with your business and platform on{" "}
+                <br className="d-none d-md-inline" /> Activ8
               </p>
               <div>
-                <button className="products_button text-white">
-                  Get funding
+                <button
+                  type="button"
+                  className="products_button text-white"
+                  onClick={() => history.push("/register")}
+                >
+                  Partner ?{" "}
                   <span>
                     <img src="./images/white_arrow.svg" alt="" />
                   </span>
@@ -202,23 +207,27 @@ const HomePage = () => {
             </div>
           </div>
           <div className="">
-            <img src="./images/laptop_guy.svg" alt="" className="card_images" />
+            <img src="./images/genesis.svg" alt="" className="card_images" />
           </div>
           <div className="cards">
             <div className="card-body">
               <div role="button">
-                <h1>Market Stall Financing</h1>
+                <h1>Activ8</h1>
                 <p className=" ">
                   You've got whooping opportunity to expand{" "}
                   <br className="d-none d-md-inline" />
-                  your business and cash flow with our Market{" "}
+                  your business and cash flow with{" "}
                   <br className="d-none d-md-inline" />
-                  Stall Financing
+                  Activ8
                 </p>
               </div>
               <div>
-                <button type="button" className="products_button text-white">
-                  Get funding{" "}
+                <button
+                  type="button"
+                  className="products_button text-white"
+                  onClick={() => history.push("/register")}
+                >
+                  Partner ?{" "}
                   <span>
                     <img src="./images/white_arrow.svg" alt="" />
                   </span>
@@ -228,22 +237,22 @@ const HomePage = () => {
           </div>
 
           <div className="">
-            <img
-              src="./images/woman_hijab.svg"
-              alt=""
-              className="card_images"
-            />
+            <img src="./images/boomplay.png" alt="" className="card_images" />
           </div>
           <div className="cards">
             <div className="card-body">
-              <h1>HAJJ</h1>
+              <h1>Activ8</h1>
               <p className="mb-5">
-                Let us support you to achieve your Hajj and{" "}
-                <br className="d-none d-md-inline" /> Ummrah Dream
+                Let us Partner with your business and platform on{" "}
+                <br className="d-none d-md-inline" /> Activ8
               </p>
               <div>
-                <button className="products_button text-white">
-                  Get funding
+                <button
+                  type="button"
+                  className="products_button text-white"
+                  onClick={() => history.push("/register")}
+                >
+                  Partner ?{" "}
                   <span>
                     <img src="./images/white_arrow.svg" alt="" />
                   </span>
@@ -252,19 +261,23 @@ const HomePage = () => {
             </div>
           </div>
           <div className="">
-            <img src="./images/smileyMan.svg" alt="" className="card_images" />
+            <img src="./images/smile.svg" alt="" className="card_images" />
           </div>
 
           <div className="cards">
             <div className="card-body">
-              <h1>HAJJ</h1>
+              <h1>Activ8</h1>
               <p className="mb-5">
-                Let us support you to achieve your Hajj and{" "}
-                <br className="d-none d-md-inline" /> Ummrah Dream
+                Let us Partner with your business and platform on{" "}
+                <br className="d-none d-md-inline" /> Activ8
               </p>
               <div>
-                <button className="products_button text-white">
-                  Get funding
+                <button
+                  type="button"
+                  className="products_button text-white"
+                  onClick={() => history.push("/register")}
+                >
+                  Partner ?{" "}
                   <span>
                     <img src="./images/white_arrow.svg" alt="" />
                   </span>
@@ -273,18 +286,22 @@ const HomePage = () => {
             </div>
           </div>
           <div className="">
-            <img src="./images/smileyLady.svg" alt="" className="card_images" />
+            <img src="./images/farm.png" alt="" className="card_images" />
           </div>
           <div className="cards">
             <div className="card-body">
-              <h1>HAJJ</h1>
+              <h1>Activ8</h1>
               <p className="mb-5">
-                Let us support you to achieve your Hajj and{" "}
-                <br className="d-none d-md-inline" /> Ummrah Dream
+                Let us Partner with your business and platform on{" "}
+                <br className="d-none d-md-inline" /> Activ8
               </p>
               <div>
-                <button type="button" className="products_button text-white">
-                  Get funding{" "}
+                <button
+                  type="button"
+                  className="products_button text-white"
+                  onClick={() => history.push("/register")}
+                >
+                  Partner ?{" "}
                   <span>
                     <img src="./images/white_arrow.svg" alt="" />
                   </span>
@@ -299,14 +316,17 @@ const HomePage = () => {
         <div className="container loan_rectangle mx-3">
           <div className="justify-content-center">
             <h3 className="text-center pt-5 font-weight-bold">
-              Get started with Alt Finance
+              Get started with Active8
             </h3>
             <p className="text-center pt-3 small">
-              The smarter way to get financing
+              The smarter way is the discount way.
             </p>
             <div className="d-flex justify-content-center">
-              <button className="loan_button text-white mt-2">
-                Get a loan{" "}
+              <button
+                className="loan_button text-white mt-2"
+                onClick={() => history.push("/login")}
+              >
+                Get started{" "}
                 <span>
                   <img src="./images/white_arrow.svg" alt="" />
                 </span>
@@ -319,7 +339,7 @@ const HomePage = () => {
       <section className="row mx-0 p-0 col-md-12 mt-sm-3 pb-2">
         <div className="col-md-12  text-center py-5">
           <h1 className="welcome_text">
-            <b>Why we stand out</b>
+            <b>Why you should partner with us</b>
           </h1>
         </div>
         <div className="container-fluid d-flex justify-content-between flex-wrap">
@@ -337,11 +357,11 @@ const HomePage = () => {
                   />
                 </div>
 
-                <p className="font-weight-bold">Flexible Payment Plan</p>
+                <p className="font-weight-bold">Flexible Coupon Plan</p>
                 <p className="small">
-                  Easy yourself the stress of hectic payback plans, at ACTIV8 we
+                  Easy yourself the stress of hectic discout plans, at ACTIV8 we
                   provide you with the most flexibility in order to meet your
-                  payment needs.
+                  discount needs.
                 </p>
               </div>
               <div className="col-md-5 mt-5">
@@ -353,10 +373,10 @@ const HomePage = () => {
                   />
                 </div>
 
-                <p className="font-weight-bold">Minimal interest rates</p>
+                <p className="font-weight-bold">Interesting Subsidized deals</p>
                 <p className="small">
                   We understand and care about your needs, thats why we have one
-                  of the best interest rates for your repayment plan.
+                  of the best interest rates for your discount plan.
                 </p>
               </div>
             </div>
@@ -385,106 +405,30 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className=" mx-0 p-0 col-md-12 mt-sm-3">
-        <div className="col text-center mt-5 pt-3 pb-4 ">
-          <h1 className="font-weight-bold">What Our Customers Say About Us</h1>
-        </div>
-
-        <div className=" row mt-4 testimonial_wrapper mx-0 p-0">
-          <div className="col-lg-3 d-flex justify-content-center">
-            <div className=" testimonials card products mb-3">
-              <div className="card-body d-flex flex-column justify-content-between">
-                <div>
-                  <img src="./images/redQuote.svg" alt="" />
-                </div>
-                <h6 className="cust_text">
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                  Aenean commodo ligula eget dolor. Aenean massa. Aenean commodo
-                  ligula eget dolor. Aenean massa. Aenean massa. Aenean commodo
-                  ligula eget dolor. Aenean massa.
-                </h6>
-
-                <div className="d-flex">
-                  <img className="pr-3" src="./images/Ceo1.svg" alt="" />
-                  <div>
-                    <h6 className="mb-0">John Doe, C.E.O</h6>
-                    <small className="">Town construction</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-3 d-flex justify-content-center">
-            <div className="testimonials card products mb-3">
-              <div className="card-body d-flex flex-column justify-content-between">
-                <div>
-                  <img src="./images/redQuote.svg" alt="" />
-                </div>
-                <h6 className="cust_text">
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                  Aenean commodo ligula eget dolor. Aenean massa. Aenean commodo
-                  ligula eget dolor. Aenean massa. Aenean massa. Aenean commodo
-                  ligula eget dolor. Aenean massa.
-                </h6>
-
-                <div className="d-flex">
-                  <img className="pr-3" src="./images/Ceo2.svg" alt="" />
-                  <div>
-                    <h6 className="mb-0">John Doe, C.E.O</h6>
-                    <small className="">Town construction</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-3 d-flex justify-content-center">
-            <div className=" testimonials card products mb-3">
-              <div className="card-body d-flex flex-column justify-content-between">
-                <div>
-                  <img src="./images/redQuote.svg" alt="" />
-                </div>
-                <h6 className="cust_text">
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                  Aenean commodo ligula eget dolor. Aenean massa. Aenean commodo
-                  ligula eget dolor. Aenean massa. Aenean massa. Aenean commodo
-                  ligula eget dolor. Aenean massa.
-                </h6>
-
-                <div className="d-flex">
-                  <img className="pr-3" src="./images/Ceo3.svg" alt="" />
-                  <div>
-                    <h6 className="mb-0">John Doe, C.E.O</h6>
-                    <small className="">Town construction</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <footer className="footer container-fluid pt-5">
         <div className="mx-5 d-flex justify-content-between row pt-md-5">
           <div className="col-md-5 d-flex justify-content-md-start footer_assets mb-4">
             <div className="text-white py-2 pt-4 pr-3 text-md-center">
               Powered by
             </div>
-            <img
-              src="./images/ACTIV8 SVG (1).svg"
-              className="logoSize"
-              alt="ACTIV8 Logo"
-            />
+            <a target="_blank" href="https://activ8-landing.vercel.app/">
+              <img
+                src="./images/ACTIV8 SVG (1).svg"
+                className="logoSize"
+                alt="ACTIV8 Logo"
+              />
+            </a>
           </div>
           <div className="col-md-6">
             <div className=" d-flex justify-content-md-end align-self-center footer_assets footer_icons">
-              <a href="">
+              <a href="https://web.facebook.com/activ8.it">
                 <img
                   src="./images/facebook_icon.svg"
                   alt="facebook"
                   className="mr-2"
                 />
               </a>
-              <a href="">
+              <a href="https://twitter.com/activ8_it">
                 <img
                   src="./images/twitter_icon.svg"
                   alt="twitter"
@@ -505,7 +449,7 @@ const HomePage = () => {
                   className="mr-2"
                 />
               </a>
-              <a href="">
+              <a href="https://www.instagram.com/activ8.it/">
                 <img
                   src="./images/instagram_icon.svg"
                   alt="instagram"

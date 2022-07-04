@@ -6,7 +6,7 @@ import { FinanceRegForm, IBVNVerifiedResponse } from "../models/finance";
 import { v4 as uuidv4 } from "uuid";
 import { Coupon, GeneratedCoupons } from "../models/coupon";
 
-export default class CouponStore {
+export default class DashStore {
   rootStore: RootStore;
   dropDown: string[] = [];
   identityCodeList: string[] = [];
@@ -40,28 +40,19 @@ export default class CouponStore {
     this.open = x;
   };
 
-  @action pageReset = () => {
-    this.identityCodeList = [];
-    this.generatedCouponList = [];
-    this.couponStatus = "";
-  };
-
   @action generateCoupon = async (couponNumber: number) => {
     try {
       runInAction(() => {
         this.couponActivatedStatus = "loading";
       });
-      const randomNumber = `${String(
-        Math.floor(Math.random() * 99) + 1
-      )}${uuidv4().slice(0, 2)}`;
-      // console.log(randomNumber);
+
       const request = {
         howmanyCoupon: couponNumber,
-        couponIdentitycode: randomNumber,
+        couponIdentitycode: uuidv4(),
       };
 
       const response = await agent.Coupon.generate_coupons(request);
-      // console.log(response);
+    //   console.log(response);
       if (response.isSuccess) {
         runInAction(() => {
           this.couponActivatedStatus = "success";
@@ -92,7 +83,7 @@ export default class CouponStore {
       };
 
       const response = await agent.Coupon.use_coupon_against_user(request);
-      // console.log(response);
+      //   console.log(response);
       if (response.isSuccess) {
         runInAction(() => {
           this.couponActivatedStatus = "success";

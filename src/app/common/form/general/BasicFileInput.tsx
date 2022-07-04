@@ -12,6 +12,7 @@ const BasicFileInput: React.FC<IProps> = ({
   inputField,
   setInputField,
   className,
+  toAccept,
   fieldClassName,
 }) => {
   const imageHandler = (e: any) => {
@@ -40,7 +41,7 @@ const BasicFileInput: React.FC<IProps> = ({
     >
       <input
         // {...input}
-        // accept="image/*"
+        accept={toAccept}
         name={input.name}
         type="file"
         onChange={(e: any) => imageHandler(e)}

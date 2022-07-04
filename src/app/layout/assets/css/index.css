@@ -250,6 +250,10 @@ li p {
 @media only screen and (max-width: 453px) {
 
 
+  .page-link{
+    padding: .2rem .40rem !important;
+  }
+
   #content_wrapper.open {
     display: none;
 }

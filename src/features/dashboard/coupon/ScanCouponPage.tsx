@@ -1,10 +1,11 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useRef, useState } from "react";
-import { QrReader } from "react-qr-reader";
+import QrReader from "react-qr-reader";
 import { Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 import LoadingModal from "../../general/LoadingModal";
 import SuccessfulMessageModal from "../general/SuccessfulMessageModal";
+import InvalidMessageModal from "./modals/InvalidMessageModal";
 
 const ScanCouponPage = () => {
   const rootStore = useContext(RootStoreContext);
@@ -12,10 +13,11 @@ const ScanCouponPage = () => {
     open,
     setOpen,
     couponActivatedStatus,
-    useCoupon,
+    validateCoupon,
     setActivatedStatus,
+    pageReset
   } = rootStore.couponStore;
-  const [data, setData] = useState("No result");
+  const [data, setData] = useState("");
   // const [open, setOpen] = React.useState(false);
   const [couponNumber, setCouponNumber] = React.useState(0);
 
@@ -25,17 +27,23 @@ const ScanCouponPage = () => {
       setOpen(false);
     }, 10000);
   };
-  const videoStyle = {
-    top: "0px",
-    left: "0px",
-    zIndex: "1",
-    boxSizing: "border-box",
-    border: "50px solid rgba(0, 0, 0, 0.3)",
-    boxShadow: "rgba(255, 0, 0, 0.5) 0px 0px 0px 5px inset !important",
-    position: "absolute",
-    width: " 100%",
-    height: " 100%",
-    objectFit: "cover",
+
+  const handleScan = (data: any) => {
+    if (data) {
+      setOpen(false);
+      validateCoupon(data).catch((error) =>
+        error ? setActivatedStatus("") : setActivatedStatus("")
+      );
+      setData("");
+    }
+  };
+  const handleError = (err: any) => {
+    console.error(err);
+  };
+  const handleResponse = () => {
+    pageReset();
+    setActivatedStatus("");
+    setOpen(false);
   };
   // console.log(data);
   return (
@@ -43,11 +51,17 @@ const ScanCouponPage = () => {
       {couponActivatedStatus === "loading" && <LoadingModal />}
       {couponActivatedStatus === "success" && (
         <SuccessfulMessageModal
-          closeModal={setActivatedStatus}
+          closeModal={handleResponse}
           message={"Coupon Applied Successfully"}
         />
       )}
 
+      {couponActivatedStatus === "failure" && (
+        <InvalidMessageModal
+          closeModal={handleResponse}
+          message={"Coupon Validation Failed"}
+        />
+      )}
       <div className="d-flex justify-content-center align-content-center pt-0">
         <div className="col-lg-5 px-3 py-5 ">
           <div className="text-center spanTittle">Scan Coupon</div>
@@ -57,22 +71,25 @@ const ScanCouponPage = () => {
               {open ? (
                 <div>
                   <QrReader
-                    key="environment"
-                    constraints={{ facingMode: "environment" }}
-                    onResult={(result, error) => {
-                      if (!!result) {
-                        setData(result!.getText());
-                        useCoupon(data).catch();
-                        setOpen(false);
-                      }
+                    // key="environment"
+                    // constraints={{ facingMode: "environment" }}
+                    facingMode="environment"
+                    // onResult={(result, error) => {
+                    //   if (!!result) {
+                    //     setData(result!.getText());
+                    //     useCoupon(data).catch();
+                    //     setOpen(false);
+                    //   }
 
-                      if (!!error) {
-                        // setOpen(false);
-                        // console.info(error);
-                      }
-                    }}
-                    scanDelay={300}
+                    //   if (!!error) {
+                    //     // setOpen(false);
+                    //     // console.info(error);
+                    //   }
+                    // }}
+                    delay={300}
                     className="qrScanner"
+                    onError={handleError}
+                    onScan={handleScan}
                     // videoContainerStyle={videoStyle}
                   />
                 </div>

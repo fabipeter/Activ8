@@ -2,9 +2,8 @@ import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect, useState } from "react";
 import { history } from "../../..";
 import LoadingSpinner from "../../general/LoadingSpinner";
-import CustomerLoginPage from "./steps/CustomerLoginPage";
+import CustomerLoginPage from "./steps/CustomerLoginPage";  
 import LoginOptionPage from "./steps/LoginOptionPage";
-
 
 const LoginPage = () => {
   const [option, setOption] = useState(0);

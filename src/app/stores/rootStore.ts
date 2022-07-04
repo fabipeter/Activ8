@@ -5,6 +5,7 @@ import UserStore from "./userStore";
 import CustomerStore from "./customerStore";
 import RoleStore from "./roleStore";
 import CouponStore from "./couponStore";
+import DashStore from "./dashStore";
 // import ModalStore from "./modalStore";
 
 configure({ enforceActions: "always" });
@@ -12,10 +13,10 @@ configure({ enforceActions: "always" });
 export class RootStore {
   userStore: UserStore;
   commonStore: CommonStore;
-  customerStore:CustomerStore;
-  roleStore:RoleStore;
+  customerStore: CustomerStore;
+  roleStore: RoleStore;
   couponStore: CouponStore;
-
+  dashStore: DashStore;
 
   // modalStore: ModalStore;
 
@@ -27,6 +28,7 @@ export class RootStore {
     this.roleStore = new RoleStore(this);
     // this.modalStore = new ModalStore(this);
     this.couponStore = new CouponStore(this);
+    this.dashStore = new DashStore(this);
   }
 }
 

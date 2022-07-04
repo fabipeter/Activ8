@@ -11,21 +11,8 @@ const Navbar = (props: any) => {
   const { logout } = rootStore.userStore;
   const [collapse, setCollapse] = useState(false);
   const loggedInUser = JSON.parse(window.localStorage.getItem("user")!);
-  // const mToken = window.localStorage.getItem("mToken");
-
   const [showDropDown, setShowDropDown] = useState(false);
   const [showBellDropDown, setShowBellDropDown] = useState(false);
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleOnScroll);
-  //   window.addEventListener("resize", handleOnScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleOnScroll);
-  //     window.removeEventListener("resize", handleOnScroll);
-  //   };
-  // }, [collapse, navClass, handleOnScroll, logout]);
-
-  // console.log(navClass);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light mx-0  navbar-style">
@@ -36,10 +23,10 @@ const Navbar = (props: any) => {
         <img src="/images/welcome-Icon.svg" alt="" />
         <div className="text-white">
           <span>
-            <b>Welcome</b>
-            {/* {loggedInUser.fullname} */}
+            <b>Welcome</b> {loggedInUser.companyName}
           </span>
-          <br /> <span className="small">Product Team</span>
+          <br />
+          {/* <span className="small">Product Team</span> */}
         </div>
       </div>
       <button
@@ -82,10 +69,10 @@ const Navbar = (props: any) => {
           </div>
         </div>
         <div
-          className="d-flex col-md-3 justify-content-md-around mx-0"
-          style={{ display: "flex", justifyContent: "space-between" }}
+          className="d-flex col-md-3 justify-content-md-around mx-0 pl-5"
+          style={{ display: "flex", justifyContent:"right" }}
         >
-          <div
+          {/* <div
             className={showBellDropDown ? "col dropdown show" : "col dropdown"}
           >
             <img
@@ -94,11 +81,13 @@ const Navbar = (props: any) => {
               className=" pt-4 ml-lg-5 bell-position dropdown-toggle"
               data-toggle="dropdown"
               onClick={() => setShowBellDropDown(!showBellDropDown)}
+              // onMouseLeave={() => setShowBellDropDown(!showBellDropDown)}
             />
             <span
               className="badge badge-light ml-lg-5 cursorPointer"
               data-toggle="dropdown"
               onClick={() => setShowBellDropDown(!showBellDropDown)}
+              // onMouseLeave={() => setShowBellDropDown(!showBellDropDown)}
             >
               3
             </span>
@@ -115,7 +104,10 @@ const Navbar = (props: any) => {
                 <img src="/images/pending-approval-icons.svg" alt="" />
                 <div className="d-flex bell-dropdown2">
                   <div className=" mx-3">
-                    Babatunde Abdul <br /> <span className="small">MSME</span>
+                    Coupon Generation <br />{" "}
+                    <span className="small">
+                      <i className="fas fa-ticket-alt"></i>
+                    </span>
                   </div>
                   <div className=" mx-2 small">
                     <span className="text-danger">Pending approval</span>
@@ -126,8 +118,11 @@ const Navbar = (props: any) => {
               <a className="dropdown-item bell-dropdown1 mb-3" href="#">
                 <img src="/images/pending-approval-icons.svg" alt="" />
                 <div className="bell-dropdown2">
-                  <div className=" mx-3">
-                    Babatunde Abdul <br /> <span className="small">MSME</span>
+                  <div className=" mr-4">
+                    Coupon Validation <br />{" "}
+                    <span className="small">
+                      <i className="fa-solid fa-check-double mx-2"></i>
+                    </span>
                   </div>
                   <div className=" mx-2 small">
                     <span className="text-danger">Pending approval</span>
@@ -138,8 +133,11 @@ const Navbar = (props: any) => {
               <a className="dropdown-item  bell-dropdown1" href="#">
                 <img src="/images/pending-approval-icons.svg" alt="" />
                 <div className="bell-dropdown2">
-                  <div className=" mx-3">
-                    Babatunde Abdul <br /> <span className="small">MSME</span>
+                  <div className=" mr-5 pr-5">
+                    QR Scan <br />{" "}
+                    <span className="small">
+                      <i className="fa-solid fa-qrcode mx-2"></i>
+                    </span>
                   </div>
                   <div className=" mx-2 small">
                     <span className="text-danger">Pending approval</span>
@@ -148,13 +146,54 @@ const Navbar = (props: any) => {
                 </div>
               </a>
             </div>
-          </div>
+          </div> */}
           <div className="col">
-            <img
-              src="/images/user-profile-image.svg"
+            {/* <img
+              src={loggedInUser.thumbnail}
               alt=""
               className=" float-md-right userPhoto"
-            />
+              style={{width:"60px", height:"60px"}}
+            /> */}
+            <svg
+              width="60"
+              height="60"
+              viewBox="0 0 60 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+            >
+              <mask
+                id="mask0_1_12"
+                style={{ maskType: "alpha" }}
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="60"
+                height="60"
+              >
+                <circle cx="30" cy="30" r="30" fill="#C4C4C4" />
+              </mask>
+              <g mask="url(#mask0_1_12)">
+                <rect width="60" height="60" fill="url(#pattern0)" />
+              </g>
+              <circle cx="49" cy="53" r="5.5" fill="#29CF00" stroke="white" />
+              <defs>
+                <pattern
+                  id="pattern0"
+                  patternContentUnits="objectBoundingBox"
+                  width="1"
+                  height="1"
+                >
+                  <use xlinkHref="#image0_1_12" transform="scale(0.00172414)" />
+                </pattern>
+                <image
+                  id="image0_1_12"
+                  width="580"
+                  height="580"
+                  xlinkHref={loggedInUser.thumbnail}
+                />
+              </defs>
+            </svg>
           </div>
         </div>
         <div
@@ -195,8 +234,43 @@ const Navbar = (props: any) => {
             <i className="fas fa-ticket-alt"></i>
             <span>Coupon</span>
           </NavLink>
-          <a onClick={logout} id="hide_sideBar_remake" className="mb-3 px-3">
-            <i className="fa-solid fa-arrow-right-from-br/acket"></i>
+          <a
+            className={
+              navName === "Profile"
+                ? "mb-3 active  px-3 cursorPointer"
+                : "mb-3  px-3"
+            }
+            id="hide_sideBar_remake"
+            onClick={() => setShowDropDown(!showDropDown)}
+          >
+            <i className="fa-solid fa-user-md"></i>
+            <span>Profile</span>
+            <i className="fa-solid fa-caret-down ml-3"></i>
+          </a>
+          <ul
+            className={showDropDown ? "collapse show" : "collapse"}
+            id="MSME_SubMenu"
+            style={{ listStyleType: "none" }}
+          >
+            <li
+              onClick={() => {
+                setCollapse(false);
+                history.push("/dashboard/change-password");
+              }}
+              className="cursorPointer"
+            >
+              {" "}
+              <a className="cursorPointer">
+                <span className="ml-4"> Change Password</span>
+              </a>
+            </li>
+          </ul>
+          <a
+            onClick={logout}
+            id="hide_sideBar_remake"
+            className="mb-3 px-3 cursorPointer"
+          >
+            <i className="fa-solid fa-arrow-right-from-bracket"></i>
             <span>Log out</span>
           </a>
         </div>

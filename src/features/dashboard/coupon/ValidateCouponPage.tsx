@@ -4,10 +4,10 @@ import { Button } from "semantic-ui-react";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 import LoadingModal from "../../general/LoadingModal";
 import SuccessfulMessageModal from "../general/SuccessfulMessageModal";
-import GenerateCouponModal from "./modals/GenerateCouponModal";
 import InvalidMessageModal from "./modals/InvalidMessageModal";
+import ValidateCouponModal from "./modals/ValidateCouponModal";
 
-const GenerateCouponPage = () => {
+const ValidateCouponPage = () => {
   const rootStore = useContext(RootStoreContext);
   const {
     open,
@@ -17,8 +17,8 @@ const GenerateCouponPage = () => {
     pageReset,
   } = rootStore.couponStore;
   // const [open, setOpen] = React.useState(false);
-  const [couponNumber, setCouponNumber] = React.useState(0);
-  // console.log(couponActivatedStatus);
+  const [couponCode, setCouponCode] = React.useState("");
+  // console.log(couponCode);
   const handleResponse = () => {
     pageReset();
     setActivatedStatus("");
@@ -30,38 +30,36 @@ const GenerateCouponPage = () => {
       {couponActivatedStatus === "success" && (
         <SuccessfulMessageModal
           closeModal={handleResponse}
-          message="Coupons Generated Successfully"
+          message="Coupons Validated Successfully"
         />
       )}
       {couponActivatedStatus === "failure" && (
         <InvalidMessageModal
           closeModal={handleResponse}
-          message={"Coupon Generation Failed"}
+          message={"Coupon Validation Failed"}
         />
       )}
       {open && (
-        <GenerateCouponModal
+        <ValidateCouponModal
           open={open}
           setOpen={setOpen}
-          couponNumber={couponNumber}
+          couponCode={couponCode}
         />
       )}
       <div className="d-flex justify-content-center align-content-center pt-5">
         <div className="col-lg-5 px-3 pt-5 ">
-          <div className="text-center spanTittle">Generate Your Coupons</div>
-          <p className="text-center py-3">Input the total number of coupons</p>
+          <div className="text-center spanTittle">Validate Coupon</div>
+          <p className="text-center py-3">Input coupon code</p>
           <div className=" mx-sm-5">
             <div className="form-group">
-              <label htmlFor="couponNumber">Enter Number of Coupons</label>
+              <label htmlFor="username">Enter Coupon Code</label>
               <input
-                type="number"
-                id="couponNumber"
+                type="text"
+                id="couponCode"
                 className="form-control"
-                placeholder="Coupon Number here"
-                // value={couponNumber}
-                onChange={(e) =>
-                  setCouponNumber(Number.parseInt(e.target.value))
-                }
+                placeholder="Coupon Code here"
+                // value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
               />
             </div>
           </div>
@@ -69,7 +67,7 @@ const GenerateCouponPage = () => {
             <Button
               id="longButton"
               className="w-100 longButton px-3 "
-              disabled={couponNumber <= 0}
+              disabled={couponCode === "" || couponCode.length < 18}
               onClick={() => setOpen(true)}
             >
               <div>Continue</div>
@@ -88,4 +86,4 @@ const GenerateCouponPage = () => {
   );
 };
 
-export default observer(GenerateCouponPage);
+export default observer(ValidateCouponPage);

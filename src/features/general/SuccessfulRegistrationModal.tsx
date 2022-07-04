@@ -1,7 +1,8 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
+import { history } from "../..";
 
-const SuccessfulMessageModal = (props: any) => {
+const SuccessfulRegistrationModal = (props: any) => {
   const { closeModal, message } = props;
   return (
     <div
@@ -28,7 +29,9 @@ const SuccessfulMessageModal = (props: any) => {
             <button
               className="close text-white"
               data-dismiss="modal"
-              onClick={() => closeModal()}
+              onClick={() => {
+                closeModal(""), history.push("/login");
+              }}
             >
               &times;
             </button>
@@ -42,4 +45,4 @@ const SuccessfulMessageModal = (props: any) => {
   );
 };
 
-export default observer(SuccessfulMessageModal);
+export default observer(SuccessfulRegistrationModal);

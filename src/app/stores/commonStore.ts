@@ -1,11 +1,15 @@
 import { RootStore } from "./rootStore";
-import { observable, action, reaction, makeAutoObservable, runInAction } from "mobx";
+import {
+  observable,
+  action,
+  reaction,
+  makeAutoObservable,
+  runInAction,
+} from "mobx";
 import jwt_decode from "jwt-decode";
 import agent from "../api/agent";
 import { history } from "../..";
 import { toast } from "react-toastify";
-
-
 
 export default class CommonStore {
   rootStore: RootStore;
@@ -72,8 +76,8 @@ export default class CommonStore {
     );
   }
 
-
-  @observable isLoggedIn: string|null = window.localStorage.getItem("isLoggedIn");
+  @observable isLoggedIn: string | null =
+    window.localStorage.getItem("isLoggedIn");
   @observable token: string | null = window.localStorage.getItem("jwt");
   @observable refreshToken: string | null =
     window.localStorage.getItem("refreshToken");
@@ -88,8 +92,8 @@ export default class CommonStore {
   @observable collapse = false;
   @observable redirectStatus = "";
 
-  @action setisLoggedIn = () => {
-    this.isLoggedIn = btoa(`secretKey=Activ8${this.token}`);
+  @action setisLoggedIn = (value: string | null) => {
+    this.isLoggedIn = value;
   };
   @action setToken = (token: string | null) => {
     this.token = token;
@@ -111,15 +115,13 @@ export default class CommonStore {
     this.appLoaded = true;
   };
 
-  
-  @action setCollapse = (collapse:boolean) => {
+  @action setCollapse = (collapse: boolean) => {
     this.collapse = collapse;
   };
 
-  @action setRedirectStatus = (redirectStatus:string) => {
+  @action setRedirectStatus = (redirectStatus: string) => {
     this.redirectStatus = redirectStatus;
   };
-
 
   @action checkTokenExpiration = async () => {
     try {
@@ -164,13 +166,10 @@ export default class CommonStore {
     }
   };
 
+  @action paymentRedirect = async (query: string) => {
+    this.setRedirectStatus("loading");
 
-  @action paymentRedirect = async (query:string) =>
-    {
-      this.setRedirectStatus("loading");
-        
-
-      const response = await fetch(
+    const response = await fetch(
       `${process.env.REACT_APP_REDIRECT_URL}${query}`,
       {
         method: "GET",
@@ -190,17 +189,12 @@ export default class CommonStore {
       }
     );
 
-
     return response;
-      
-     
-  }
-
-  
+  };
 
   @action tokenRefresh = async () =>
     await fetch(
-      `${process.env.REACT_APP_API_URL}/AdminAuthentication/RefreshToken`,
+      `${process.env.REACT_APP_API_URL}/Altsub_Merchant/RefreshToken`,
       {
         method: "POST",
         mode: "cors",
@@ -232,14 +226,13 @@ export default class CommonStore {
     return expires.getTime() - Date.now();
   }
 
-
   @action clearLocalStorage() {
     window.localStorage.removeItem("jwt");
     window.localStorage.removeItem("refreshToken");
     window.localStorage.removeItem("isLoggedIn");
     window.localStorage.removeItem("user");
     window.localStorage.removeItem("profileStatus");
-    history.push("/");  
+    history.push("/");
     toast.info("Your session has expired, please login again");
   }
-};
+}

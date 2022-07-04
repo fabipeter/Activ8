@@ -58,38 +58,7 @@ const PasswordInput: React.FC<IProps> = ({
         className={iconClassName}
         onClick={() => togglePasswordVisiblity(!isPasswordShown)}
       />
-      {popup && (
-        <Popup
-          on="click"
-          trigger={
-            <span className="show_Terms_Password ">
-              <p>Your password should contain at least 8 characters </p>
-              <Grid centered divided columns={2}>
-                <Grid.Column textAlign="left">
-                  <Label circular color="purple" className="minilabel" />
-                  <span>1 uppercase</span>
-                </Grid.Column>
-                <Grid.Column textAlign="left">
-                  <Label circular color="red" className="minilabel" />
-                  <span>1 lowercase</span>
-                </Grid.Column>
-              </Grid>
-              <Grid centered divided columns={2}>
-                <Grid.Column textAlign="left">
-                  <Label circular color="green" className="minilabel" />
-                  <span>1 number</span>
-                </Grid.Column>
-                <Grid.Column textAlign="left">
-                  <Label circular color="blue" className="minilabel" />
-                  <span>5 characters</span>
-                </Grid.Column>
-              </Grid>
-            </span>
-          }
-          // content="I am positioned to the right center"
-          position="right center"
-        />
-      )}
+     
       {touched && error && (
         <Label basic color="red">
           {error}

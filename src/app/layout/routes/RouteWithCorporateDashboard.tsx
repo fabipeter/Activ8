@@ -30,19 +30,21 @@ const RouteWithCorporateDashboard: React.FC<IProps> = ({
   ...rest
 }) => {
   const rootStore = useContext(RootStoreContext);
-  const { token } = rootStore.commonStore;
-  const {loginStatus} = rootStore.userStore;
-  const decodedSub = {
-    role: "Merchant",
-  };
-  // const decoded = JSON.parse(JSON.stringify(jwt_decode(token!)));
+  const { loginStatus } = rootStore.userStore;
+  const { isLoggedIn } = rootStore.commonStore;
+  // const decodedSub = {
+  //   role: "Merchant",
+  // };
+  const token = window.localStorage.getItem("jwt");
+  // const isLoggedIn = window.localStorage.getItem("isLoggedIn");
+
   return (
     <Route
       exact={exact}
       path={path}
       {...rest}
       render={(routeProps) =>
-        !decodedSub || decodedSub.role !== "Merchant" ? (
+        !token || isLoggedIn !== "dHJ1ZXNlY3JldEtleT1BY3Rpdjg=" ? (
           <Redirect to="/" />
         ) : (
           <>

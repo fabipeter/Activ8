@@ -22,6 +22,9 @@ import ScanCouponPage from "../../features/dashboard/coupon/ScanCouponPage";
 import LoginPage2 from "../../features/authentication/login/LoginPage2";
 import CorporateRegisterForm from "../../features/authentication/register/CorporateRegisterForm";
 import CorporateLoginPage from "../../features/authentication/login/steps/CorporateLoginPage";
+import ResetPasswordPage from "../../features/authentication/resetpassword/ResetPasswordPage";
+import ValidateCouponPage from "../../features/dashboard/coupon/ValidateCouponPage";
+import ChangePasswordPage from "../../features/dashboard/profile/ChangePasswordPage";
 
 const App: React.FC<RouteComponentProps> = () => {
   const rootStore = useContext(RootStoreContext);
@@ -54,7 +57,7 @@ const App: React.FC<RouteComponentProps> = () => {
         setTimeLeft(calculateTimeLeft());
       }, 1000);
 
-      if (atob(isLoggedIn!.split("secretKey=Activ8")[1]) === token) {
+      if (isLoggedIn === "dHJ1ZXNlY3JldEtleT1BY3Rpdjg=") {
         // if (timeLeft < 160000) {
         //   console.log(timeLeft);
         //   console.log(refresh);
@@ -80,16 +83,13 @@ const App: React.FC<RouteComponentProps> = () => {
                   // setTimeLeft(calculateTimeLeft());
                   // setRefresh(true);
                   clearLocalStorage();
-                  history.push("/");
                 }
               });
           } catch {
             clearLocalStorage();
-            history.push("/");
           }
         } else if (timeLeft < 0) {
           clearLocalStorage();
-          history.push("/");
         }
 
         return () => clearTimeout(timer);
@@ -123,6 +123,7 @@ const App: React.FC<RouteComponentProps> = () => {
         {/* <Route exact path="/login" component={LoginPage} /> */}
         <Route exact path="/login" component={CorporateLoginPage} />
         <Route exact path="/register" component={CorporateRegisterForm} />
+        <Route exact path="/reset-password" component={ResetPasswordPage} />
         {/* <Route exact path="/finance" component={FinanceForm} /> */}
 
         <RouteWithCorporateDashboard
@@ -152,10 +153,27 @@ const App: React.FC<RouteComponentProps> = () => {
         />
         <RouteWithCorporateDashboard
           exact
+          path="/dashboard/validateCoupon"
+          component={ValidateCouponPage}
+          navName="Coupon"
+          navTitle="Coupon"
+          subNavName=""
+        />
+        <RouteWithCorporateDashboard
+          exact
           path="/dashboard/scanCoupon"
           component={ScanCouponPage}
           navName="Coupon"
           navTitle="Coupon"
+          subNavName=""
+        />
+
+        <RouteWithCorporateDashboard
+          exact
+          path="/dashboard/change-password"
+          component={ChangePasswordPage}
+          navName="Profile"
+          navTitle="Profile"
           subNavName=""
         />
         {/* Dashboard */}

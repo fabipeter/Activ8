@@ -4,12 +4,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../src/app/layout/assets/css/styles.css";
 // import "../src/app/layout/assets/css/dashboard.css";
 // import "../src/app/layout/assets/css/all.min.css"
-
-import $ from "jquery";
-import Popper from "popper.js";
 // import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-import "../src/app/layout/assets/css/index.css"
+import "../src/app/layout/assets/css/index.css";
 
 import "boxicons";
 import ReactDOM from "react-dom";

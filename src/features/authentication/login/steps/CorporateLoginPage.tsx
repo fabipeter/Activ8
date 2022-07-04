@@ -16,36 +16,44 @@ import { history } from "../../../..";
 import ErrorMessage from "../../../../app/common/form/general/ErrorMessage";
 import PasswordInput from "../../../../app/common/form/general/PasswordInput";
 import TextInput from "../../../../app/common/form/general/TextInput";
-import { CorporateLoginFormValues } from "../../../../app/models/user";
+import {
+  CorporateLoginFormValues,
+  CustomerLoginFormValues,
+  IUserFormValues,
+} from "../../../../app/models/user";
 import { RootStoreContext } from "../../../../app/stores/rootStore";
 import LoadingModal from "../../../general/LoadingModal";
 import LoadingSpinner from "../../../general/LoadingSpinner";
 
+const isValidEmail = createValidator(
+  (message) => (value) => {
+    if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+      return message;
+    }
+  },
+  "Invalid email address"
+);
+
 const validate = combineValidators({
-  registrationNumber: composeValidators(
-    isRequired("Registration Number"),
-    isNumeric("Registration Number"),
-    hasLengthBetween(
-      11,
-      11
-    )({
-      message: "Invalid",
-    })
-  )(),
+  emailAddress: composeValidators(isRequired("Email Address"), isValidEmail)(),
   password: isRequired("Password"),
 });
 
 const CorporateLoginPage = () => {
-  // const { setOptionState } = props;
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
   const rootStore = useContext(RootStoreContext);
+  const { isLoggedIn } = rootStore.commonStore;
+  const token = window.localStorage.getItem("jwt");
 
-  const [inputField, setInputField] = useState(new CorporateLoginFormValues());
+  const [inputField, setInputField] = useState(new CustomerLoginFormValues());
   const [isPasswordShown, togglePasswordVisiblity] = useState(false);
 
   const {
     // sendOTP,
     validateUser,
     corporateLoginLoading,
+    loginVerification,
     corporateLogin,
   } = rootStore.userStore;
 
@@ -59,9 +67,26 @@ const CorporateLoginPage = () => {
     // console.log(e.target.name, e.target.value);
     // console.log(inputField);
 
-    setInputField({ ...inputField, [e.target.name]: e.target.value });
+    setInputField({ ...inputField, [e.target.name]: btoa(e.target.value) });
     // setInputField(inputField);
   };
+  const handleOTPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target.value)
+    // if (isNaN(Number.parseInt(e.target.value))) return false;
+
+    setOtp(e.target.value);
+    // console.log(otp);
+
+    setOtpError("");
+  };
+
+  useEffect(() => {
+    if (token && isLoggedIn === "dHJ1ZXNlY3JldEtleT1BY3Rpdjg=") {
+      history.push("/dashboard/analytics");
+    }
+  }, [token, isLoggedIn]);
+
+  if (token) return <LoadingSpinner />;
 
   return (
     <div className="commonPageWrapper">
@@ -77,10 +102,14 @@ const CorporateLoginPage = () => {
       <div className="d-flex justify-content-center align-content-center pb-3">
         <FinalForm
           // className="col-lg-5 p-5"
-          onSubmit={() =>
-            corporateLogin(inputField).catch((error) => ({
-              [FORM_ERROR]: error,
-            }))
+          onSubmit={(values: IUserFormValues) =>
+            loginVerification
+              ? validateUser(values.emailAddress, otp).catch((error) =>
+                  setOtpError(error)
+                )
+              : corporateLogin(inputField).catch((error) => ({
+                  [FORM_ERROR]: error,
+                }))
           }
           validate={validate}
           render={({
@@ -101,16 +130,16 @@ const CorporateLoginPage = () => {
               <p className="text-center">Log into your ACTIV8 account</p>
               <div className="form-group">
                 <label htmlFor="registrationNumber">
-                  Enter your Registration Number
+                  Enter your Email Address
                 </label>
                 <Field
-                  disabled={corporateLoginLoading}
-                  type="number"
-                  id="registrationNumber"
+                  disabled={corporateLoginLoading || loginVerification}
+                  type="text"
+                  id="emailAddress"
                   className="form-control"
-                  name="registrationNumber"
+                  name="emailAddress"
                   component={TextInput}
-                  placeholder="Registration Number Here"
+                  placeholder="Email Address Here"
                   autoComplete="off"
                   onChange={handleChange}
                 />
@@ -119,7 +148,7 @@ const CorporateLoginPage = () => {
                 <label htmlFor="password">Enter your password *</label>
 
                 <Field
-                  disabled={corporateLoginLoading}
+                  disabled={corporateLoginLoading || loginVerification}
                   fieldClassName="loginPasswordField wrap-input100 validate-input"
                   className="FieldFormInput form-control"
                   iconClassName="password-icon"
@@ -133,22 +162,52 @@ const CorporateLoginPage = () => {
                   style={{ position: "relative" }}
                 />
               </div>
-              <p className="float-right forgot_password">
-                <a>Forgot Password?</a>
-              </p>{" "}
-              <br />
+              {!loginVerification && (
+                <p className="float-right forgot_password ">
+                  <a
+                    className="cursorPointer"
+                    onClick={() => history.push("/reset-password")}
+                  >
+                    Forgot Password?
+                  </a>
+                </p>
+              )}
+              {loginVerification && (
+                <div className="py-3">
+                  <label className="mt-2">Enter OTP</label>
+                  <Field
+                    disabled={corporateLoginLoading}
+                    fieldClassName="loginUsernameField"
+                    className="loginUsernameInput bg-light"
+                    name="mobileToken"
+                    // type="number"
+                    component={TextInput}
+                    placeholder="Enter mobile token here"
+                    onChange={handleOTPChange}
+                  />
+                </div>
+              )}
               {submitError && !dirtySinceLastSubmit && (
                 <ErrorMessage
                   className="loginFormError"
                   error={submitError}
-                  text="Invalid Registration Number or Password"
+                  text="Invalid Email Address or Password"
                 />
+              )}
+              {otp.toString().length == 6 && otpError && (
+                <Message className="otpLoginErrorMessage" negative>
+                  <p>{otpError}</p>
+                </Message>
               )}
               <div className="form-group">
                 <Button
                   id="longButton"
                   className="btn w-100 longButton px-3"
-                  disabled={(invalid && !dirtySinceLastSubmit) || pristine}
+                  disabled={
+                    loginVerification
+                      ? otp.toString().length != 7
+                      : (invalid && !dirtySinceLastSubmit) || pristine
+                  }
                   loading={submitting}
                 >
                   <div>Login</div>
@@ -160,7 +219,7 @@ const CorporateLoginPage = () => {
                 </Button>
               </div>
               <p className="text-center grey-Medium_Bold-texts">
-                New to the platform?
+                New to the platform?{" "}
                 <span className="purpleTexts sign_Up_Link">
                   <a onClick={() => history.push("/register")}>Sign Up</a>
                 </span>
